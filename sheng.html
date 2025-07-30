@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%">
+<head>
+  <meta charset="utf-8">
+  <title>广东省红树林生态回报率</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#56A3F1',
+            secondary: '#FF917C',
+            neutral: '#f5f5f5',
+            dark: '#333333',
+            light: '#666666',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .chart-container {
+        height: calc(100vh - 240px);
+        min-height: 400px;
+      }
+      .tooltip-card {
+        @apply bg-white p-4 rounded-lg shadow-lg border border-gray-200;
+      }
+      .info-box {
+        @apply bg-blue-50 border border-blue-100 rounded-lg p-4 mb-4;
+      }
+      .stat-card {
+        @apply bg-white rounded-lg shadow-md p-4 transition-all duration-300 hover:shadow-lg;
+      }
+    }
+  </style>
+</head>
+<body class="font-inter bg-gray-50 text-dark">
+  <div class="container mx-auto px-4 py-6">
+    <header class="text-center mb-8">
+      <h1 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-2">广东省红树林生态回报率</h1>
+      <p class="text-light text-lg">全球基准与广东案例对比分析</p>
+      <div class="flex justify-center mt-4">
+        <div class="inline-flex items-center mr-6">
+          <span class="w-4 h-4 rounded-full bg-primary mr-2"></span>
+          <span>全球基准</span>
+        </div>
+        <div class="inline-flex items-center">
+          <span class="w-4 h-4 rounded-full bg-secondary mr-2"></span>
+          <span>广东案例</span>
+        </div>
+      </div>
+    </header>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div class="stat-card col-span-1">
+        <h3 class="text-lg font-semibold mb-2 flex items-center">
+          <i class="fa fa-line-chart text-primary mr-2"></i>经济效益
+        </h3>
+        <p class="text-3xl font-bold mb-2">
+          <span class="text-primary">15.0</span>
+          <span class="text-light text-lg ml-1">倍</span>
+          <span class="text-light text-base ml-2">全球基准</span>
+        </p>
+        <p class="text-3xl font-bold">
+          <span class="text-secondary">12.0</span>
+          <span class="text-light text-lg ml-1">倍</span>
+          <span class="text-light text-base ml-2">广东案例</span>
+        </p>
+        <p class="text-sm text-light mt-2">
+          红树林保护的经济回报率是投资成本的倍数，体现长期经济价值。
+        </p>
+      </div>
+      
+      <div class="stat-card col-span-1">
+        <h3 class="text-lg font-semibold mb-2 flex items-center">
+          <i class="fa fa-leaf text-primary mr-2"></i>生态服务
+        </h3>
+        <p class="text-3xl font-bold mb-2">
+          <span class="text-primary">57.4</span>
+          <span class="text-light text-lg ml-1">%</span>
+          <span class="text-light text-base ml-2">全球基准</span>
+        </p>
+        <p class="text-3xl font-bold">
+          <span class="text-secondary">80.0</span>
+          <span class="text-light text-lg ml-1">%</span>
+          <span class="text-light text-base ml-2">广东案例</span>
+        </p>
+        <p class="text-sm text-light mt-2">
+          生态系统服务功能指数，包括碳汇、生物多样性保护、海岸防护等。
+        </p>
+      </div>
+      
+      <div class="stat-card col-span-1">
+        <h3 class="text-lg font-semibold mb-2 flex items-center">
+          <i class="fa fa-users text-primary mr-2"></i>社会效益
+        </h3>
+        <p class="text-3xl font-bold mb-2">
+          <span class="text-primary">40.0</span>
+          <span class="text-light text-lg ml-1">%</span>
+          <span class="text-light text-base ml-2">全球基准</span>
+        </p>
+        <p class="text-3xl font-bold">
+          <span class="text-secondary">60.0</span>
+          <span class="text-light text-lg ml-1">%</span>
+          <span class="text-light text-base ml-2">广东案例</span>
+        </p>
+        <p class="text-sm text-light mt-2">
+          社会福祉提升指数，包括就业、社区发展、教育和文化价值等方面。
+        </p>
+      </div>
+    </div>
+    
+    <div class="chart-container bg-white rounded-lg shadow-md p-4 mb-8">
+      <div id="mangroveChart" class="w-full h-full"></div>
+    </div>
+    
+    <div class="info-box">
+      <h3 class="text-lg font-semibold mb-2 flex items-center">
+        <i class="fa fa-info-circle text-blue-500 mr-2"></i>关于生态回报率
+      </h3>
+      <p class="mb-2">生态回报率是衡量生态保护项目综合效益的重要指标，通过经济效益、生态服务和社会效益三个维度进行评估。</p>
+      <ul class="list-disc pl-5 mb-2">
+        <li><strong>经济效益</strong>：投资回报倍数，体现红树林保护的长期经济价值</li>
+        <li><strong>生态服务</strong>：包括碳汇、生物多样性保护、海岸防护等生态系统服务功能</li>
+        <li><strong>社会效益</strong>：涵盖就业、社区发展、教育和文化价值等社会福祉提升</li>
+      </ul>
+      <p>数据来源：全球红树林联盟(GMA)、广东省林业局、《自然》杂志研究报告</p>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    // 初始化图表
+    var chartDom = document.getElementById('mangroveChart');
+    var myChart = echarts.init(chartDom, 'dark', {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    
+    // 图表配置
+    var option = {
+      color: ['#56A3F1', '#FF917C'],
+      animation: true,
+      animationDuration: 1500,
+      animationEasing: 'elasticOut',
+      
+      tooltip: {
+        trigger: 'item',
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        padding: 12,
+        textStyle: {
+          color: '#333',
+          fontFamily: 'Inter, system-ui, sans-serif'
+        },
+        formatter: function(params) {
+          var value = params.value;
+          var name = params.name;
+          var indicator = option.radar[0].indicator;
+          
+          var tooltipContent = `<div class="font-semibold text-lg mb-2">${name}</div>`;
+          
+          for (var i = 0; i < value.length; i++) {
+            var unit = i === 0 ? '倍' : '%';
+            tooltipContent += `
+              <div class="flex justify-between items-center py-1 border-b border-gray-100">
+                <span>${indicator[i].text}</span>
+                <span class="font-semibold">${value[i]}${unit}</span>
+              </div>
+            `;
+          }
+          
+          return tooltipContent;
+        }
+      },
+      
+      legend: {
+        top: '5%',
+        left: 'center',
+        data: ['全球基准', '广东案例'],
+        textStyle: {
+          fontFamily: 'Inter, system-ui, sans-serif',
+          fontSize: 14
+        },
+        itemWidth: 12,
+        itemHeight: 12,
+        itemGap: 20
+      },
+      
+      radar: [
+        {
+          indicator: [
+            { text: '经济效益', max: 16 },
+            { text: '生态服务', max: 100 },
+            { text: '社会效益', max: 100 }
+          ],
+          center: ['50%', '55%'],
+          radius: '60%',
+          shape: 'polygon',
+          splitNumber: 5,
+          
+          axisName: {
+            color: '#333',
+            backgroundColor: '#f5f5f5',
+            borderRadius: 3,
+            padding: [3, 5],
+            fontSize: 14,
+            fontFamily: 'Inter, system-ui, sans-serif'
+          },
+          
+          splitArea: {
+            areaStyle: {
+              color: [
+                'rgba(245, 247, 250, 0.3)',
+                'rgba(235, 239, 245, 0.3)',
+                'rgba(225, 232, 240, 0.3)',
+                'rgba(215, 225, 235, 0.3)',
+                'rgba(205, 218, 230, 0.3)'
+              ]
+            }
+          },
+          
+          axisLine: {
+            lineStyle: {
+              color: '#999',
+              width: 1
+            }
+          },
+          
+          splitLine: {
+            lineStyle: {
+              color: '#ddd',
+              width: 1
+            }
+          }
+        }
+      ],
+      
+      series: [
+        {
+          type: 'radar',
+          radarIndex: 0,
+          symbolSize: 8,
+          lineStyle: {
+            width: 3,
+            type: 'solid'
+          },
+          areaStyle: {
+            opacity: 0.4
+          },
+          emphasis: {
+            areaStyle: {
+              opacity: 0.7
+            },
+            lineStyle: {
+              width: 4
+            }
+          },
+          data: [
+            {
+              value: [15, 57.4, 40],
+              name: '全球基准',
+              lineStyle: {
+                color: '#56A3F1'
+              },
+              areaStyle: {
+                color: '#56A3F1'
+              },
+              symbol: 'circle',
+              symbolSize: 8
+            },
+            {
+              value: [12, 80, 60],
+              name: '广东案例',
+              lineStyle: {
+                color: '#FF917C'
+              },
+              areaStyle: {
+                color: '#FF917C'
+              },
+              symbol: 'diamond',
+              symbolSize: 8,
+              label: {
+                show: true,
+                position: 'top',
+                distance: 10,
+                formatter: function(params) {
+                  var unit = params.dataIndex === 0 ? '倍' : '%';
+                  return params.value + unit;
+                },
+                color: '#333',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                fontSize: 12,
+                fontWeight: 'normal'
+              }
+            }
+          ]
+        }
+      ]
+    };
+    
+    // 设置图表选项
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+    
+    // 响应窗口大小变化
+    window.addEventListener('resize', myChart.resize);
+    
+    // 添加鼠标悬停交互
+    myChart.on('mouseover', function(params) {
+      if (params.componentType === 'series') {
+        myChart.setOption({
+          series: [{
+            id: params.seriesId,
+            emphasis: {
+              focus: 'series'
+            }
+          }]
+        });
+      }
+    });
+    
+    // 添加图例点击交互
+    myChart.on('legendselectchanged', function(params) {
+      // 防止取消所有图例
+      var selected = params.selected;
+      var selectedCount = 0;
+      for (var key in selected) {
+        if (selected[key]) {
+          selectedCount++;
+        }
+      }
+      
+      if (selectedCount === 0) {
+        // 如果取消了所有图例，恢复原来的选择
+        myChart.setOption({
+          legend: {
+            selected: {
+              '全球基准': true,
+              '广东案例': true
+            }
+          }
+        });
+        return false;
+      }
+    });
+  </script>
+</body>
+</html>
+    
